@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0f172a">
     <meta name="description" content="Professional weather application with real-time data, forecasts, and alerts">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <title>Celestial • Weather Intelligence</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%233b82f6'/><stop offset='100%25' style='stop-color:%238b5cf6'/></linearGradient><circle cx='50' cy='50' r='45' fill='url(%23g)'/><text x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>☀️</text></svg>">
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,6 +20,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-72.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body>
     <!-- Dynamic Background Layer -->
@@ -61,18 +66,24 @@
             <i class="fa-solid fa-triangle-exclamation"></i>
             <span id="alertMessage"></span>
             <button class="close-alert" id="closeAlert">×</button>
-        </div>
-
-        <!-- Loading State -->
-        <div class="loading-container hidden" id="loadingState">
-            <div class="weather-loader">
-                <div class="cloud-loader"></div>
-                <p>Analyzing atmospheric conditions...</p>
             </div>
-        </div>
-
-        <!-- Error State -->
-        <div class="error-container hidden" id="errorState">
+            
+            <!-- Loading State -->
+            <div class="loading-container hidden" id="loadingState">
+                <div class="skeleton-loader">
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-temp"></div>
+                    <div class="skeleton-grid">
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                        <div class="skeleton skeleton-stat"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error State -->
+            <div class="error-container hidden" id="errorState">
             <i class="fa-solid fa-cloud-exclamation"></i>
             <h3>Weather Unavailable</h3>
             <p id="errorText">Please check your connection and try again</p>
