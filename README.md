@@ -27,13 +27,6 @@ This project was built to practice frontend development, API integration, and re
 
 # WeatherNow – Real-Time Weather Forecast Website
 
-## Features
-## Built With
-## Live Demo
-## Weather API Integration
-## Responsive Design
-## Author
-
 ## Keywords
 Weather website, forecast app, weather dashboard, JavaScript weather app, real-time weather checker
 
