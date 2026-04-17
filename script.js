@@ -761,3 +761,126 @@ async function loadDefaultLocation() {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);
+
+// Favorite Cities Feature
+const favorites = JSON.parse(localStorage.getItem('weatherFavorites') || '[]');
+
+function addToFavorites(city) {
+    if (!favorites.includes(city)) {
+        favorites.push(city);
+        localStorage.setItem('weatherFavorites', JSON.stringify(favorites));
+        showToast(`📍 ${city} added to favorites`);
+        updateFavoritesList();
+    }
+}
+
+function removeFromFavorites(city) {
+    const index = favorites.indexOf(city);
+    if (index > -1) {
+        favorites.splice(index, 1);
+        localStorage.setItem('weatherFavorites', JSON.stringify(favorites));
+        updateFavoritesList();
+    }
+}
+
+function updateFavoritesList() {
+    // Create dropdown in header
+    const favContainer = document.createElement('div');
+    favContainer.className = 'favorites-dropdown';
+    // ... implementation
+}
+
+function showToast(message) {
+    const toast = document.getElementById('voiceToast');
+    toast.querySelector('span').textContent = message;
+    toast.classList.remove('hidden');
+    setTimeout(() => toast.classList.add('hidden'), 2000);
+}
+
+const mapLayers = {
+    radar: 'radar',
+    satellite: 'satellite',
+    temperature: 'temp',
+    wind: 'wind',
+    precipitation: 'precipitation'
+};
+
+function changeRadarLayer(layer) {
+    const lat = state.currentWeather?.coord?.lat || 51.5;
+    const lon = state.currentWeather?.coord?.lon || -0.1;
+    const url = `https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&zoom=8&overlay=${layer}`;
+    elements.radarFrame.src = url;
+}
+
+async function fetchHistoricalData(lat, lon) {
+    // OpenWeatherMap historical API (requires paid plan)
+    // Alternative: Use localStorage to cache and show trends
+    const history = JSON.parse(localStorage.getItem(`weather_${state.city}`) || '[]');
+    history.push({
+        temp: state.currentWeather.main.temp,
+        time: new Date().toISOString()
+    });
+    
+    // Keep last 7 days
+    const weekData = history.slice(-168); // 168 hours = 7 days
+    localStorage.setItem(`weather_${state.city}`, JSON.stringify(weekData));
+}
+
+const translations = {
+    en: {
+        feelsLike: 'Feels like',
+        humidity: 'Humidity',
+        wind: 'Wind',
+        // ... more translations
+    },
+    es: {
+        feelsLike: 'Sensación térmica',
+        humidity: 'Humedad',
+        wind: 'Viento',
+        // ... more translations
+    }
+};
+
+function setLanguage(lang) {
+    state.language = lang;
+    updateUIText();
+    // Refetch weather with lang parameter
+    fetchWeatherData(state.city);
+}
+
+// In sw.js
+self.addEventListener('push', event => {
+    const data = event.data.json();
+    const options = {
+        body: data.message,
+        icon: '/icons/icon-192.png',
+        badge: '/icons/icon-72.png',
+        vibrate: [200, 100, 200],
+        data: { url: data.url },
+        actions: [
+            { action: 'open', title: 'View Details' },
+            { action: 'close', title: 'Dismiss' }
+        ]
+    };
+    
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    if (event.action === 'open') {
+        clients.openWindow(event.notification.data.url);
+    }
+});
+
+function compareWeather(city1, city2) {
+    Promise.all([
+        fetch(`${CONFIG.BASE_URL}/weather?q=${city1}&appid=${CONFIG.API_KEY}`),
+        fetch(`${CONFIG.BASE_URL}/weather?q=${city2}&appid=${CONFIG.API_KEY}`)
+    ]).then(([res1, res2]) => {
+        // Create comparison modal
+        showComparisonModal(res1, res2);
+    });
+}
