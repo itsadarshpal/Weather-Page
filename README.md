@@ -20,7 +20,7 @@ A responsive weather website that provides real-time weather updates, hourly for
 [Visit Website](https://itsadarshpal.github.io/Weather-Page/)
 
 ## Screenshots
-(Add images)
+<img width="1876" height="898" alt="image" src="https://github.com/user-attachments/assets/d07f8609-8920-46d2-b168-20baf25c4146" />
 
 ## Why This Project?
 This project was built to practice frontend development, API integration, and responsive UI design.
